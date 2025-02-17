@@ -1,3 +1,4 @@
+import styles from './style.module.scss';
 import gsap from "gsap";
 
 const SearchBar = () => {
@@ -9,6 +10,7 @@ const SearchBar = () => {
             type="text"
             placeholder="Search episodes..."
             onFocus={onEnter}
+            className={styles.wrapper}
         />
     )
 }

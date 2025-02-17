@@ -3,8 +3,16 @@
     height: 300px;
     width: 100%;
     display: flex;
-    gap: 40px;
     align-items: center;
+    overflow-x: clip;
+}
+
+.carouselList{
+    border: 2px solid red;
+    display: flex;
+    gap: 40px;
+    height: 100%;
+    width: max-content;
 }
 
 .CIWrapper{
@@ -12,6 +20,6 @@
     border-radius: 8px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     width: 320px;
-    height: 80%;
     cursor: pointer;
+    flex-shrink: 0;
 }
