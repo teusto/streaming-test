@@ -1,14 +1,15 @@
 .wrapper{
-    background-color: rgb(245, 242, 207);
+    //background-color: rgb(245, 242, 207);
     height: 300px;
     width: 100%;
     display: flex;
     align-items: center;
     overflow-x: clip;
+    position: relative;
 }
 
 .carouselList{
-    border: 2px solid red;
+    //border: 2px solid red;
     display: flex;
     gap: 40px;
     height: 100%;
@@ -19,7 +20,18 @@
     background-color: rgb(255, 230, 192);
     border-radius: 8px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
-    width: 320px;
+    width: 220px;
     cursor: pointer;
     flex-shrink: 0;
+}
+
+.shadeBorderSection{
+    //border: 2px solid red;
+    position: absolute;
+    left: 0;
+    height: 150%;
+    width: 1%;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: linear-gradient(to right, white, #FFFFFF10);
 }
