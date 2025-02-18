@@ -1,9 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import styles from './style.module.scss';
 import { useGSAP } from '@gsap/react';
 import gsap, { Power4 } from 'gsap';
+import { Flip } from 'gsap/Flip';
+import { useNavigate, useViewTransitionState } from 'react-router';
 
-const CarouselItem = ({ animateEnter, id, animateExit, animateState, animateClick }) => {
+gsap.registerPlugin(Flip);
+
+const CarouselItem = forwardRef(({ animateEnter, id, animateExit, animateState, animateClick }, ref) => {
     const onCursorEnter = () => {
         // stop the carousel
         animateState('pause')
@@ -26,28 +30,65 @@ const CarouselItem = ({ animateEnter, id, animateExit, animateState, animateClic
     }
 
     return (
-        <div className={styles.CIWrapper} onMouseOver={onCursorEnter} onMouseOut={onCursorExits} onClick={onCursorClick}/>
+        <div className={styles.CIWrapper} onMouseOver={onCursorEnter} onMouseOut={onCursorExits} onClick={onCursorClick} ref={ref} />
     )
-}
+})
 
 const Carousel = () => {
     const [animationState, setAnimationState] = useState('initial');
     const carouselListRef = useRef<HTMLInputElement>(null);
+    const listItemsRef = useRef([]);
+    const [flipState, setFlipState] = useState();
+    let navigate = useNavigate();
 
     const animateEnter = (itemID: number) => {
-        gsap.to([carouselListRef.current?.childNodes[itemID]], { y: -100, ease: Power4.easeOut, width: 420 });
-        gsap.to([carouselListRef.current], { y: -100, ease: Power4.easeOut }).pause();
+        gsap.to(listItemsRef.current[itemID], { yPercent: -20, ease: Power4.easeOut, width: 420, onComplete: () => console.log('animateEnter onComplete')});
     }
 
     const animateExit = (itemID: number) => {
-        gsap.to([carouselListRef.current?.childNodes[itemID]], { y: 0, ease: Power4.easeInOut, width: 220 });
+        gsap.to(listItemsRef.current[itemID], { yPercent: 0, ease: 'back.in', width: 220 });
     }
 
     const animateClick = (itemID: number) => {
         setAnimationState('stop');
-        //gsap.to(carouselListRef.current, { width: '100%',position: 'fixed', top: 0, height: '60%', duration: 1, delay: 1, ease: Power4.easeIn})
-        //gsap.to([carouselListRef.current?.childNodes[itemID]], { width: '100%', duration: 1, delay: 1, ease: Power4.easeIn})
+        let state = Flip.getState(carouselListRef.current?.childNodes, { props: 'backgroundColor, borderRadius, opacity, transform' })
+        setFlipState(state)
+        carouselListRef.current?.childNodes.forEach((element, index) => {
+            if (index === itemID) {
+                let searchBox = document.getElementById("SEARCH")
+                let whereToPut = document.getElementById("APP")
+                whereToPut.append(listItemsRef.current[itemID]);
+                //parent.append(listItemsRef.current[itemID])
+                console.log({ whereToPut, searchBox })
+                searchBox?.remove();
+                listItemsRef.current[itemID].style.opacity = 1;
+                listItemsRef.current[itemID].style.borderRadius = 0;
+                listItemsRef.current[itemID].style.transform = 'translate(0%,0%)';
+                listItemsRef.current[itemID].style.position = 'absolute';
+                listItemsRef.current[itemID].style.left = '0px';   
+                listItemsRef.current[itemID].style.top = '0px';
+                listItemsRef.current[itemID].style.height = '299.9px';
 
+                carouselListRef.current?.remove()
+                return;
+            };
+            console.log({ element })
+            listItemsRef.current[index].style.opacity = 0;
+        })
+        Flip.from(state, {
+            duration: 2,
+            ease: 'expo.out',
+            absolute: true,
+            prune: true,
+            onEnter: (element) => {
+                console.log('on enterer flip', element)
+            },
+            onStart: () => console.log('Started Flip'),
+            onLeave: (element) => console.log('on leave', element),
+            onComplete: () => {
+                navigate("/Series")
+            }
+        })
     }
 
     useGSAP((context) => {
@@ -59,27 +100,27 @@ const Carousel = () => {
         if (animationState === 'resume') {
             tl.resume()
         }
-        if(animationState === 'stop'){
+        if (animationState === 'stop') {
             tl.kill()
             context.kill()
         }
-        console.log({context})
+        //console.log({ context })
     }, [animationState])
+
+    //console.log({ listItemsRef, flipState, carouselListRef })
 
     return (
         <section className={styles.wrapper}>
             {carouselListRef &&
                 <ul className={styles.carouselList} ref={carouselListRef}>
-                    <CarouselItem id={0} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
-                    <CarouselItem id={1} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
-                    <CarouselItem id={2} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
-                    <CarouselItem id={3} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
-                    <CarouselItem id={4} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
-                    <CarouselItem id={5} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
-                    <CarouselItem id={6} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick}/>
+                    {[1, 2, 3, 4, 5, 6, 7].map((data, index) => {
+                        return (
+                            <CarouselItem ref={r => listItemsRef.current[index] = r} key={index} id={index} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick} />
+                        )
+                    })}
                 </ul>
             }
-            <div className={styles.shadeBorderSection}/>
+            <div className={styles.shadeBorderSection} />
         </section>
     )
 }

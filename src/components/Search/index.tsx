@@ -7,12 +7,13 @@ const SearchBar = () => {
     }
 
     const onExit = () => {
-        gsap.to(`.${styles.wrapper}`, { backgroundColor: 'white', scale: 1, ease: 'power2.out', duration: .3})
+        gsap.to(`.${styles.wrapper}`, { backgroundColor: 'rgb(20,20,20)', scale: 1, ease: 'power2.out', duration: .2})
     }
 
     return(
         <input 
             type="text"
+            id='SEARCH'
             placeholder="Search episodes..."
             onFocus={onEnter}
             onBlur={onExit}

@@ -3,7 +3,7 @@ import styles from './App.module.scss';
 
 const App = (): React.JSX.Element => {
  return(
-  <section className={styles.AppWrapper}>
+  <section className={styles.AppWrapper} id="APP">
     <MainFrame />
   </section>
  )
