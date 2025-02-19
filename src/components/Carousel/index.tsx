@@ -4,16 +4,16 @@ import { useGSAP } from '@gsap/react';
 import gsap, { Power4 } from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { useNavigate, useViewTransitionState } from 'react-router';
+import { useOMDbPosters } from '../../hooks/useOMDb';
 
 gsap.registerPlugin(Flip);
 
-const CarouselItem = forwardRef(({ animateEnter, id, animateExit, animateState, animateClick }, ref) => {
+const CarouselItem = forwardRef(({ animateEnter, id, animateExit, animateState, animateClick, poster, apiID }, ref) => {
     const onCursorEnter = () => {
         // stop the carousel
         animateState('pause')
         // animate up and large width to show informatio
         animateEnter(id)
-        console.log('mouse hovered over carousel item')
     }
 
     const onCursorExits = () => {
@@ -21,35 +21,39 @@ const CarouselItem = forwardRef(({ animateEnter, id, animateExit, animateState, 
         animateExit(id)
         animateState('resume')
         // carousel playing again from where it stopped
-        console.log('mouse exits carousel item')
+        
     }
 
     const onCursorClick = () => {
-        animateClick(id)
-        console.log('mouse cliked carousel item')
+        animateClick(id, apiID, poster)
+        
     }
 
     return (
-        <div className={styles.CIWrapper} onMouseOver={onCursorEnter} onMouseOut={onCursorExits} onClick={onCursorClick} ref={ref} />
+        <div style={{backgroundImage: `url(${poster})`}} className={styles.CIWrapper} onMouseOver={onCursorEnter} onMouseOut={onCursorExits} onClick={onCursorClick} ref={ref} />
     )
 })
 
-const Carousel = () => {
+const Carousel = ({data}) => {
     const [animationState, setAnimationState] = useState('initial');
     const carouselListRef = useRef<HTMLInputElement>(null);
     const listItemsRef = useRef([]);
     const [flipState, setFlipState] = useState();
     let navigate = useNavigate();
 
+    const imdbIds = data?.map((episode: any) => episode.imdbId) || [];
+    // Fetch posters for all episodes
+    const { posters, loading: postersLoading, error: postersError } = useOMDbPosters(imdbIds);
+
     const animateEnter = (itemID: number) => {
-        gsap.to(listItemsRef.current[itemID], { yPercent: -20, ease: Power4.easeOut, width: 420, onComplete: () => console.log('animateEnter onComplete')});
+        gsap.to(listItemsRef.current[itemID], { yPercent: -20, ease: Power4.easeOut, width: 420});
     }
 
     const animateExit = (itemID: number) => {
         gsap.to(listItemsRef.current[itemID], { yPercent: 0, ease: 'back.in', width: 220 });
     }
 
-    const animateClick = (itemID: number) => {
+    const animateClick = (itemID: number, id: string, poster: string) => {
         setAnimationState('stop');
         let state = Flip.getState(carouselListRef.current?.childNodes, { props: 'backgroundColor, borderRadius, opacity, transform' })
         setFlipState(state)
@@ -59,7 +63,6 @@ const Carousel = () => {
                 let whereToPut = document.getElementById("APP")
                 whereToPut.append(listItemsRef.current[itemID]);
                 //parent.append(listItemsRef.current[itemID])
-                console.log({ whereToPut, searchBox })
                 searchBox?.remove();
                 listItemsRef.current[itemID].style.opacity = 1;
                 listItemsRef.current[itemID].style.borderRadius = 0;
@@ -72,7 +75,6 @@ const Carousel = () => {
                 carouselListRef.current?.remove()
                 return;
             };
-            console.log({ element })
             listItemsRef.current[index].style.opacity = 0;
         })
         Flip.from(state, {
@@ -80,19 +82,14 @@ const Carousel = () => {
             ease: 'expo.out',
             absolute: true,
             prune: true,
-            onEnter: (element) => {
-                console.log('on enterer flip', element)
-            },
-            onStart: () => console.log('Started Flip'),
-            onLeave: (element) => console.log('on leave', element),
             onComplete: () => {
-                navigate("/Series")
+                navigate(`episode/${id}`, {state: poster})
             }
         })
     }
 
     useGSAP((context) => {
-        let tl = gsap.to(carouselListRef.current, { x: (carouselListRef.current?.clientWidth - window.innerWidth) * -1, ease: 'none', repeat: -1, duration: 6 })
+        let tl = gsap.to(carouselListRef.current, { x: (carouselListRef.current?.clientWidth - window.innerWidth) * -1, ease: 'none', repeat: -1, duration: 20 })
         if (animationState === 'pause') {
             tl.pause()
             context.kill()
@@ -104,18 +101,15 @@ const Carousel = () => {
             tl.kill()
             context.kill()
         }
-        //console.log({ context })
     }, [animationState])
-
-    //console.log({ listItemsRef, flipState, carouselListRef })
 
     return (
         <section className={styles.wrapper}>
-            {carouselListRef &&
+            {carouselListRef && data &&
                 <ul className={styles.carouselList} ref={carouselListRef}>
-                    {[1, 2, 3, 4, 5, 6, 7].map((data, index) => {
+                    {data.map((data, index) => {
                         return (
-                            <CarouselItem ref={r => listItemsRef.current[index] = r} key={index} id={index} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick} />
+                            <CarouselItem ref={r => listItemsRef.current[index] = r} key={index} id={index} poster={posters[data.imdbId]} animateEnter={animateEnter} animateExit={animateExit} animateState={setAnimationState} animateClick={animateClick} apiID={data.id}/>
                         )
                     })}
                 </ul>
