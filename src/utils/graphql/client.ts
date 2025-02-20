@@ -14,7 +14,7 @@ const wsLink = new WebSocketLink({
   options: {
     reconnect: true,
     connectionParams: {
-      'x-api-key': import.meta.env.VITE_API_KEY,
+      "x-api-key": import.meta.env.VITE_API_KEY,
     },
   },
 });

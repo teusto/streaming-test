@@ -3,8 +3,9 @@ import styles from './style.module.scss';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useQuery } from '@apollo/client';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GET_EPISODE_BY_ID } from '../utils/graphql/queries';
+import { CgChevronLeft } from "react-icons/cg";
 
 const DeleteEpisode = ({ }) => {
     return (
@@ -37,6 +38,7 @@ const Series = () => {
 
     const { id } = useParams();
     const { state } = useLocation();
+    const navigate = useNavigate();
     
     const { loading, error, data } = useQuery(GET_EPISODE_BY_ID, {
         variables: { episodeId: id },
@@ -54,8 +56,6 @@ const Series = () => {
         console.log('warning entered delete mode')
     }, [mode])
 
-    console.log({id, data, state})
-
     const episode = data?.getEpisodeById;
 
     return (
@@ -68,8 +68,8 @@ const Series = () => {
                     <p className={styles.title}>{episode?.title} <span>{episode?.releaseDate}</span></p>
                     <p className={styles.genre}>{episode?.series}</p>
                     <div className={styles.btnContainer}>
-                        <div className={styles.subscribeContainer}>
-                            Subscribe
+                        <div className={styles.navigateContainer} role='button' onClick={() => navigate(-1)}>
+                            <CgChevronLeft />
                         </div>
                         <div className={styles.deleteContainer} role='button' onClick={enterDeleteMode}>
                             Delete
@@ -83,7 +83,7 @@ const Series = () => {
                             return <EpisodeBox key={index} controlMode={mode} />
                         })}
                         <div className={styles.EBWrapper_create} />
-                    </ul> */}
+                    </ul> - This was a list of episodes by tv show, so if the page was abou the show and not the episode */}
                 </div>
             </div>
         </section>

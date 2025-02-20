@@ -24,7 +24,6 @@ export const useOMDbPosters = (imdbIds: string[]) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Debounced fetch function
   const fetchPosters = useCallback(
     debounce(async (ids: string[]) => {
       setLoading(true);
@@ -52,7 +51,7 @@ export const useOMDbPosters = (imdbIds: string[]) => {
         setLoading(false);
       }
     }, 500), // 500ms debounce delay
-    [] // Dependency array for useCallback
+    []
   );
 
   useEffect(() => {

@@ -10,7 +10,7 @@ export interface Episode {
   }
   
   export interface EpisodeInput {
-    id?: string; // Optional for creation
+    id?: string;
     series: string;
     title: string;
     description: string;

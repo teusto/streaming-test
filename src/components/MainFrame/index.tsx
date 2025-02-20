@@ -5,8 +5,8 @@ import { useLazyQuery } from '@apollo/client';
 import { LIST_EPISODES } from '../../utils/graphql/queries';
 import { useEffect, useState } from 'react';
 import SidebarButton from '../CreateEpisode/SidebarButton';
-import NotificationsBox from '../Notifications';
 import Sidebar from '../CreateEpisode/Sidebar';
+import SubscriptionHandler from '../SubscriptionHandler';
 
 const MainFrame = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -43,8 +43,8 @@ const MainFrame = () => {
 
     return (
         <section className={styles.wrapper}>
-            {/* Subscription Box -  */}
-            <NotificationsBox />
+            {/* Subscription Handler */}
+            <SubscriptionHandler />
             {/* Subscription Box -  */}
             <SidebarButton onClickButton={toggleSidebar} />
             {/* Create Episode Sidebar - */}
