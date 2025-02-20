@@ -3,12 +3,19 @@ import SearchBar from '../Search';
 import styles from './style.module.scss';
 import { useLazyQuery } from '@apollo/client';
 import { LIST_EPISODES } from '../../utils/graphql/queries';
-import { useEffect } from 'react';
-import CreateEpisodeCard from '../CreateEpisode';
+import { useEffect, useState } from 'react';
+import SidebarButton from '../CreateEpisode/SidebarButton';
 import NotificationsBox from '../Notifications';
+import Sidebar from '../CreateEpisode/Sidebar';
 
 const MainFrame = () => {
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [executeSearch, { data, loading }] = useLazyQuery(LIST_EPISODES);
+
+    const toggleSidebar = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
 
     const handleSearch = (searchTerm: string) => {
         executeSearch({
@@ -39,7 +46,9 @@ const MainFrame = () => {
             {/* Subscription Box -  */}
             <NotificationsBox />
             {/* Subscription Box -  */}
-            <CreateEpisodeCard />
+            <SidebarButton onClickButton={toggleSidebar} />
+            {/* Create Episode Sidebar - */}
+            <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
             <div className={styles.top}>
                 <SearchBar onSearch={handleSearch} />
             </div>

@@ -1,9 +1,11 @@
+@import '../../styles/styles.scss';
+
 .card {
     position: fixed;
     top: 20px;
     right: 20px;
     width: 120px;
-    background-color: rgb(20, 20, 20);
+    background-color: $black;
     border-radius: 8px;
     padding: 10px 20px;
     border-radius: 8px;
@@ -11,6 +13,6 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: white;
+    color: $white;
     box-shadow: rgba(97, 97, 97, 0.237) 0px 6px 24px 0px, rgba(174, 174, 174, 0.736) 0px 0px 0px 1px;
   }

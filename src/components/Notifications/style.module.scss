@@ -1,3 +1,5 @@
+@import '../../styles/styles.scss';
+
 .box {
     position: fixed;
     top: 20px;
@@ -6,10 +8,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
     font-weight: bold;
     text-align: center;
-    color: white;
+    color: $white;
     box-shadow: rgba(97, 97, 97, 0.237) 0px 6px 24px 0px, rgba(174, 174, 174, 0.736) 0px 0px 0px 1px;
     background-color: rgb(20, 20, 20);
     padding: 10px 20px;
@@ -21,10 +22,10 @@
     }
   
     &.update {
-      background-color: #3b82f6; // Blue for update
+      background-color: $blue; // Blue for update
     }
   
     &.delete {
-      background-color: #ef4444; // Red for delete
+      background-color: $red; // Red for delete
     }
   }

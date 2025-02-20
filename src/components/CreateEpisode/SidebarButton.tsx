@@ -2,9 +2,9 @@ import { useMutation } from '@apollo/client';
 import { CREATE_EPISODE } from '../../utils/graphql/mutations';
 import { EpisodeInput } from '../../utils/graphql/types';
 import { useForm } from 'react-hook-form';
-import styles from './style.module.scss';
+import styles from './sidebarbutton.module.scss';
 
-const CreateEpisodeCard = () => {
+const SidebarButton = ({onClickButton}) => {
     const [createEpisode, { loading, error }] = useMutation(CREATE_EPISODE, {
       update(cache, { data: { createEpisode } }) {
         // Update the cache after mutation
@@ -32,10 +32,10 @@ const CreateEpisodeCard = () => {
     };
   
     return (
-      <div className={styles.card} onClick={() => onSubmit({})}>
+      <div className={styles.card} onClick={onClickButton}>
         <span>+</span>
       </div>
     );
   };
 
-export default CreateEpisodeCard;
+export default SidebarButton;

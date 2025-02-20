@@ -1,5 +1,6 @@
+@import '../../styles/styles.scss';
+
 .wrapper{
-    //background-color: rgb(245, 242, 207);
     height: 300px;
     width: 100%;
     display: flex;
@@ -8,7 +9,6 @@
 }
 
 .carouselList{
-    //border: 2px solid red;
     display: flex;
     gap: 40px;
     height: 100%;
@@ -28,7 +28,6 @@
 }
 
 .shadeBorderSection{
-    //border: 2px solid red;
     position: absolute;
     left: 0;
     top: 0;
@@ -45,7 +44,7 @@
     height: 100%;
     display: none;
     .finalCard{
-        border: 2px solid red;
+        border: 2px solid $red;
         width: 100vw;
         height: 100%;
     }
