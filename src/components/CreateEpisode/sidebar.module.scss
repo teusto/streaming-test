@@ -86,17 +86,17 @@
     cursor: pointer;
   
     &:hover {
-      background: #2563eb; // Darker blue on hover
+      background: #2563eb;
     }
   
     &:disabled {
-      background: #9ca3af; // Gray when disabled
+      background: $gray;
       cursor: not-allowed;
     }
   }
   
   .error {
-    color: $red; // Red for errors
+    color: $red;
     font-size: 12px;
     margin-top: 8px;
   }

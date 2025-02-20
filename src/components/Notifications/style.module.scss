@@ -12,20 +12,20 @@
     text-align: center;
     color: $white;
     box-shadow: rgba(97, 97, 97, 0.237) 0px 6px 24px 0px, rgba(174, 174, 174, 0.736) 0px 0px 0px 1px;
-    background-color: rgb(20, 20, 20);
+    background-color: $black;
     padding: 10px 20px;
     border-radius: 8px;
     transition: background-color 0.3s ease;
   
     &.create {
-      background-color: #10b981; // Green for create
+      background-color: #10b981;
     }
   
     &.update {
-      background-color: $blue; // Blue for update
+      background-color: $blue;
     }
   
     &.delete {
-      background-color: $red; // Red for delete
+      background-color: $red;
     }
   }

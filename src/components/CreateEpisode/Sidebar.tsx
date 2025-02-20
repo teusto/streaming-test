@@ -28,7 +28,6 @@ const Sidebar = ({ isOpen, onClose }: CreateEpisodeSidebarProps) => {
   const { register, handleSubmit, reset } = useForm<EpisodeInput>();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // GSAP animation for sidebar
   useEffect(() => {
     if (sidebarRef.current) {
       gsap.to(sidebarRef.current, {
@@ -44,8 +43,8 @@ const Sidebar = ({ isOpen, onClose }: CreateEpisodeSidebarProps) => {
       await createEpisode({
         variables: { episode: {...formData, id: formData.imdbId} },
       });
-      reset(); // Reset form after successful submission
-      onClose(); // Close the sidebar
+      reset();
+      onClose();
     } catch (err) {
       console.error('Error creating episode:', err);
     }

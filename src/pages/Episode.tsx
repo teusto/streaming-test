@@ -2,29 +2,59 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './style.module.scss';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { GET_EPISODE_BY_ID } from '../utils/graphql/queries';
-import { CgChevronLeft } from "react-icons/cg";
+import { DELETE_EPISODE } from '../utils/graphql/mutations';
+import { CgChevronLeft, CgClose } from "react-icons/cg";
 
-const DeleteEpisode = ({ }) => {
+const DeleteEpisode = ({id }) => {
+    const navigate = useNavigate();
+    const [deleteEpisode, { loading }] = useMutation(DELETE_EPISODE);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleDelete = async () => {
+        if (!id) return;
+    
+        try {
+          await deleteEpisode({
+            variables: { episodeId: id },
+            update(cache) {
+              cache.modify({
+                fields: {
+                  listEpisodes(existingEpisodes = [], { readField }) {
+                    return existingEpisodes.filter(
+                      (episodeRef: any) => id !== readField('id', episodeRef)
+                    );
+                  },
+                },
+              });
+            },
+          });
+          navigate(-1);
+        } catch (err) {
+          setError('Failed to delete episode');
+        }
+      };
+
+    error && <p className={styles.error}>{error}</p>
     return (
-        <div className={styles.DEWrapper} />
+        <div className={styles.DEWrapper} children={<CgClose />} onClick={handleDelete}/>
     )
 }
 
-const EpisodeBox = ({ controlMode }) => {
-    return (
-        <div className={controlMode == 'delete' ? styles.EBWrapper_animate : styles.EBWrapper}>
-            {controlMode === 'delete' && <DeleteEpisode />}
-        </div>
-    )
-}
+// const EpisodeBox = ({ controlMode }) => {
+//     return (
+//         <div className={controlMode == 'delete' ? styles.EBWrapper_animate : styles.EBWrapper}>
+//             {controlMode === 'delete' && <DeleteEpisode />}
+//         </div>
+//     )
+// }
 
-const EpisodeData = ({controlMode, data}) => {
+const EpisodeData = ({ controlMode, data}) => {
     return (
         <div className={controlMode == 'delete' ? styles.EDWrapper_animate : styles.EDWrapper}>
-            {controlMode === 'delete' && <DeleteEpisode />}
+            {controlMode === 'delete' && <DeleteEpisode id={data?.id}/>}
             <p><span>{data?.seasonNumber}</span>s<span>{data?.episodeNumber}</span>ep</p>
             <p>{data?.description}</p>
         </div>
@@ -39,7 +69,7 @@ const Series = () => {
     const { id } = useParams();
     const { state } = useLocation();
     const navigate = useNavigate();
-    
+
     const { loading, error, data } = useQuery(GET_EPISODE_BY_ID, {
         variables: { episodeId: id },
     });
@@ -61,7 +91,7 @@ const Series = () => {
     return (
         <section className={styles.wrapper}>
             <div className={styles.containerVideo}>
-                <div style={{backgroundImage: `url(${state})`}} className={styles.card} ref={videoPlayerRef} />
+                <div style={{ backgroundImage: `url(${state})` }} className={styles.card} ref={videoPlayerRef} />
             </div>
             <div className={styles.bottom}>
                 <div className={styles.left}>
@@ -77,7 +107,7 @@ const Series = () => {
                     </div>
                 </div>
                 <div className={styles.right}>
-                    <EpisodeData controlMode={mode} data={episode}/>
+                    <EpisodeData controlMode={mode} data={episode} />
                     {/* <ul className={styles.listEpisodes}>
                         {episodes.map((data, index) => {
                             return <EpisodeBox key={index} controlMode={mode} />

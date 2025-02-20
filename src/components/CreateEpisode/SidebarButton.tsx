@@ -25,7 +25,7 @@ const SidebarButton = ({onClickButton}) => {
         await createEpisode({
           variables: { episode: formData },
         });
-        reset(); // Reset form after successful submission
+        reset();
       } catch (err) {
         console.error('Error creating episode:', err);
       }

@@ -167,14 +167,18 @@
 }
 
 .DEWrapper {
-    background-color: $white;
-    color: $red;
+    background-color: $red;
+    color: $black;
     border-radius: 100%;
     width: 25px;
     height: 25px;
     position: absolute;
     top: -5px;
     right: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
 }
 
 @keyframes tilt-shaking {

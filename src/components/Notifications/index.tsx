@@ -12,7 +12,6 @@ const NotificationsBox = () => {
   const [eventType, setEventType] = useState<'create' | 'update' | 'delete' | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
-  // Subscribe to all three events
   useSubscription(ON_CREATE_EPISODE, {
     onData: () => setEventType('create'),
   });
@@ -25,19 +24,16 @@ const NotificationsBox = () => {
     onData: () => setEventType('delete'),
   });
 
-  // Animate the box when eventType changes
   useEffect(() => {
     if (eventType && boxRef.current) {
-      // GSAP animation
       gsap.fromTo(
         boxRef.current,
-        { scale: 0.8, opacity: 0 }, // Start state
-        { scale: 1, opacity: 1, duration: 0.5, ease: 'power2.out' } // End state
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.5, ease: 'power2.out' }
       );
     }
   }, [eventType]);
 
-  // Reset the event type after 3 seconds
   useEffect(() => {
     if (eventType) {
       const timeout = setTimeout(() => setEventType(null), 3000);

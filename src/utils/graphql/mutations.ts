@@ -14,3 +14,9 @@ export const CREATE_EPISODE = gql`
     }
   }
 `;
+
+export const DELETE_EPISODE = gql`
+  mutation DeleteEpisode($episodeId: String!) {
+    deleteEpisode(episodeId: $episodeId)
+  }
+`;

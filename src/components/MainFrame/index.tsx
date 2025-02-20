@@ -38,7 +38,7 @@ const MainFrame = () => {
 
     // not used but the idea was to group and show by series and the page would list all the episodes
     let groupedBySeries = data && groupBy(['series'])(data.listEpisodes)
-    console.log({ groupedBySeries })
+    //console.log({ groupedBySeries })
 
 
     return (
